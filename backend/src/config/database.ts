@@ -10,10 +10,14 @@ export const connectDB = async (): Promise<void> => {
         await mongoose.connect(config.mongodbUri, {
             serverSelectionTimeoutMS: 15000,
             autoIndex: false, // Prevent index building on startup to avoid Node v24 crashes
+            family: 4, // Force IPv4 to avoid Node v24 DNS/IPv6 resolution issues
         });
         console.log('✅ Connected to MongoDB Atlas');
-    } catch (error) {
-        console.error('❌ MongoDB connection error:', error);
+    } catch (error: any) {
+        console.error('❌ MongoDB connection error details:');
+        console.error('   Message:', error.message);
+        console.error('   Code:', error.code);
+        console.error('   Reason:', JSON.stringify(error.reason, null, 2));
         process.exit(1);
     }
 };
