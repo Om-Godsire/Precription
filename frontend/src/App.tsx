@@ -13,6 +13,7 @@ import AdherencePage from './pages/AdherencePage';
 import EmergencyPage from './pages/EmergencyPage';
 import CreatePrescriptionPage from './pages/CreatePrescriptionPage';
 import ProfilePage from './pages/ProfilePage';
+import NearbyCarePage from './pages/NearbyCarePage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; roles?: string[] }> = ({ children, roles }) => {
     const { isAuthenticated, user, loading } = useAuth();
@@ -64,10 +65,30 @@ const App: React.FC = () => {
                     <Route path="/emergency" element={
                         <ProtectedRoute roles={['patient']}><Layout><EmergencyPage /></Layout></ProtectedRoute>
                     } />
+                    <Route path="/nearby" element={
+                        <ProtectedRoute roles={['patient']}><Layout><NearbyCarePage /></Layout></ProtectedRoute>
+                    } />
 
                     {/* Doctor routes */}
                     <Route path="/prescriptions/new" element={
                         <ProtectedRoute roles={['doctor']}><Layout><CreatePrescriptionPage /></Layout></ProtectedRoute>
+                    } />
+
+                    {/* Redirected placeholder routes */}
+                    <Route path="/prescriptions" element={
+                        <ProtectedRoute><Layout><DashboardRouter /></Layout></ProtectedRoute>
+                    } />
+                    <Route path="/side-effects" element={
+                        <ProtectedRoute><Layout><DashboardRouter /></Layout></ProtectedRoute>
+                    } />
+                    <Route path="/patients" element={
+                        <ProtectedRoute><Layout><DashboardRouter /></Layout></ProtectedRoute>
+                    } />
+                    <Route path="/verify" element={
+                        <ProtectedRoute><Layout><DashboardRouter /></Layout></ProtectedRoute>
+                    } />
+                    <Route path="/refills" element={
+                        <ProtectedRoute><Layout><DashboardRouter /></Layout></ProtectedRoute>
                     } />
 
                     {/* Shared routes */}

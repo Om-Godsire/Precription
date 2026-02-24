@@ -10,6 +10,7 @@ const roleMenus: Record<string, { label: string; path: string; icon: string }[]>
         { label: 'Adherence', path: '/adherence', icon: '✅' },
         { label: 'Side Effects', path: '/side-effects', icon: '⚠️' },
         { label: 'Emergency', path: '/emergency', icon: '🚨' },
+        { label: 'Nearby Care', path: '/nearby', icon: '📍' },
         { label: 'Profile', path: '/profile', icon: '👤' },
     ],
     doctor: [
