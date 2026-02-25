@@ -129,7 +129,7 @@
 
   /* ── Sidebar Icon Rail ── */
   .rail-link {
-    @apply flex items-center gap-3 p-2.5 rounded-2xl text-slate-500 font-medium transition-all duration-200 hover:bg-primary-50/60 hover:text-primary-600;
+    @apply flex items-center gap-3 px-2.5 py-2 rounded-2xl text-slate-500 font-medium transition-all duration-200 hover:bg-primary-50/60 hover:text-primary-600;
   }
 
   .rail-link-active {
@@ -138,7 +138,11 @@
 
   .rail-link .rail-icon,
   .rail-link-active .rail-icon {
-    @apply w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-200;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    @apply rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-200;
   }
 
   .rail-link:hover .rail-icon {
@@ -147,7 +151,7 @@
 
   .rail-link-active .rail-icon {
     @apply bg-primary-500 text-white;
-    box-shadow: 0 0 12px rgba(99, 102, 241, 0.15);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
   }
 
   /* ── Glass containers ── */

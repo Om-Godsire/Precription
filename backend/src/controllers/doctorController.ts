@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
 import { Doctor, User, Patient, Prescription, Medicine } from '../models';
 import { v4 as uuidv4 } from 'uuid';
-import { generateVerificationCode } from '../utils/jwt';
+import { generateVerificationCode, generateEmergencyToken } from '../utils/jwt';
 
 export const getProfile = async (req: Request, res: Response) => {
     try {
@@ -86,15 +87,19 @@ export const getPrescriptions = async (req: Request, res: Response) => {
 export const searchPatients = async (req: Request, res: Response) => {
     try {
         const { q } = req.query;
-        if (!q) return res.json([]);
 
-        const users = await User.find({
-            role: 'patient',
-            $or: [
+        const query: any = { role: 'patient' };
+        if (q && (q as string).trim()) {
+            query.$or = [
                 { name: { $regex: q as string, $options: 'i' } },
                 { email: { $regex: q as string, $options: 'i' } },
-            ],
-        }).select('-password_hash -refresh_token').limit(20);
+            ];
+        }
+
+        const users = await User.find(query)
+            .select('-password_hash -refresh_token')
+            .sort({ created_at: -1 })
+            .limit(50);
 
         const result = [];
         for (const u of users) {
@@ -106,6 +111,41 @@ export const searchPatients = async (req: Request, res: Response) => {
         }
 
         res.json(result);
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const addPatient = async (req: Request, res: Response) => {
+    try {
+        const { name, email } = req.body;
+        if (!name || !email) return res.status(400).json({ error: 'Name and email are required' });
+
+        // Check if user already exists
+        const existing = await User.findOne({ email });
+        if (existing) {
+            if (existing.role === 'patient') {
+                return res.json({ message: 'Patient already exists', patient: { id: existing._id.toString(), name: existing.name, email: existing.email } });
+            }
+            return res.status(400).json({ error: 'This email is registered with a different role' });
+        }
+
+        // Create user with a default password (patient can change later)
+        const defaultPassword = 'MedVault@123';
+        const password_hash = await bcrypt.hash(defaultPassword, 12);
+        const user = await User.create({ name, email, password_hash, role: 'patient' });
+
+        // Create patient profile
+        await Patient.create({
+            user_id: user._id,
+            emergency_token: generateEmergencyToken(),
+        });
+
+        res.status(201).json({
+            message: 'Patient added successfully',
+            patient: { id: user._id.toString(), name: user.name, email: user.email },
+            default_password: defaultPassword,
+        });
     } catch (error: any) {
         res.status(500).json({ error: error.message });
     }

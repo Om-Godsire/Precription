@@ -4,7 +4,7 @@ import { validate } from '../middleware/validate';
 import { prescriptionSchema } from '../utils/validators';
 import {
     getProfile, updateProfile, createPrescription,
-    getPrescriptions, getPatientHistory, searchPatients, getDashboard
+    getPrescriptions, getPatientHistory, searchPatients, getDashboard, addPatient
 } from '../controllers/doctorController';
 
 const router = Router();
@@ -17,6 +17,7 @@ router.put('/profile', updateProfile);
 router.post('/prescriptions', validate(prescriptionSchema), createPrescription);
 router.get('/prescriptions', getPrescriptions);
 router.get('/patients/search', searchPatients);
+router.post('/patients', addPatient);
 router.get('/patients/:patientId/history', getPatientHistory);
 router.get('/dashboard', getDashboard);
 

@@ -14,6 +14,13 @@ import EmergencyPage from './pages/EmergencyPage';
 import CreatePrescriptionPage from './pages/CreatePrescriptionPage';
 import ProfilePage from './pages/ProfilePage';
 import NearbyCarePage from './pages/NearbyCarePage';
+import PatientPrescriptionsPage from './pages/PatientPrescriptionsPage';
+import SideEffectsPage from './pages/SideEffectsPage';
+import DoctorPrescriptionsPage from './pages/DoctorPrescriptionsPage';
+import DoctorPatientsPage from './pages/DoctorPatientsPage';
+import PharmacyVerifyPage from './pages/PharmacyVerifyPage';
+import PharmacyRefillsPage from './pages/PharmacyRefillsPage';
+import CaregiverPatientsPage from './pages/CaregiverPatientsPage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; roles?: string[] }> = ({ children, roles }) => {
     const { isAuthenticated, user, loading } = useAuth();
@@ -38,6 +45,24 @@ const DashboardRouter: React.FC = () => {
         case 'pharmacy': return <PharmacyDashboard />;
         case 'caregiver': return <CaregiverDashboard />;
         default: return <PatientDashboard />;
+    }
+};
+
+const PrescriptionRouter: React.FC = () => {
+    const { user } = useAuth();
+    switch (user?.role) {
+        case 'patient': return <PatientPrescriptionsPage />;
+        case 'doctor': return <DoctorPrescriptionsPage />;
+        default: return <PatientPrescriptionsPage />;
+    }
+};
+
+const PatientsRouter: React.FC = () => {
+    const { user } = useAuth();
+    switch (user?.role) {
+        case 'doctor': return <DoctorPatientsPage />;
+        case 'caregiver': return <CaregiverPatientsPage />;
+        default: return <DoctorPatientsPage />;
     }
 };
 
@@ -74,21 +99,21 @@ const App: React.FC = () => {
                         <ProtectedRoute roles={['doctor']}><Layout><CreatePrescriptionPage /></Layout></ProtectedRoute>
                     } />
 
-                    {/* Redirected placeholder routes */}
+                    {/* Role-specific routes */}
                     <Route path="/prescriptions" element={
-                        <ProtectedRoute><Layout><DashboardRouter /></Layout></ProtectedRoute>
+                        <ProtectedRoute><Layout><PrescriptionRouter /></Layout></ProtectedRoute>
                     } />
                     <Route path="/side-effects" element={
-                        <ProtectedRoute><Layout><DashboardRouter /></Layout></ProtectedRoute>
+                        <ProtectedRoute roles={['patient']}><Layout><SideEffectsPage /></Layout></ProtectedRoute>
                     } />
                     <Route path="/patients" element={
-                        <ProtectedRoute><Layout><DashboardRouter /></Layout></ProtectedRoute>
+                        <ProtectedRoute roles={['doctor', 'caregiver']}><Layout><PatientsRouter /></Layout></ProtectedRoute>
                     } />
                     <Route path="/verify" element={
-                        <ProtectedRoute><Layout><DashboardRouter /></Layout></ProtectedRoute>
+                        <ProtectedRoute roles={['pharmacy']}><Layout><PharmacyVerifyPage /></Layout></ProtectedRoute>
                     } />
                     <Route path="/refills" element={
-                        <ProtectedRoute><Layout><DashboardRouter /></Layout></ProtectedRoute>
+                        <ProtectedRoute roles={['pharmacy']}><Layout><PharmacyRefillsPage /></Layout></ProtectedRoute>
                     } />
 
                     {/* Shared routes */}

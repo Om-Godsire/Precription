@@ -76,6 +76,7 @@ export const doctorAPI = {
     getPrescriptions: () => api.get('/doctor/prescriptions'),
     searchPatients: (q: string) => api.get(`/doctor/patients/search?q=${q}`),
     getPatientHistory: (patientId: string) => api.get(`/doctor/patients/${patientId}/history`),
+    addPatient: (data: { name: string; email: string }) => api.post('/doctor/patients', data),
 };
 
 // Pharmacy API
