@@ -18,10 +18,10 @@ import NearbyCarePage from './pages/NearbyCarePage';
 const ProtectedRoute: React.FC<{ children: React.ReactNode; roles?: string[] }> = ({ children, roles }) => {
     const { isAuthenticated, user, loading } = useAuth();
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #f0f4ff 0%, #e8ecf8 50%, #f5f0ff 100%)' }}>
             <div className="text-center">
                 <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-slate-500 font-medium">Loading MedVault...</p>
+                <p className="text-slate-500 font-semibold">Loading MedVault...</p>
             </div>
         </div>
     );
